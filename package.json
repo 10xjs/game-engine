@@ -1,0 +1,29 @@
+{
+  "name": "engine",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "start": "node_modules/.bin/webpack-dev-server --inline"
+  },
+  "author": "Neal Granger <neal@metalab.co>",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "babel-loader": "^6.2.0",
+    "babel-preset-metalab": "^0.1.2",
+    "eslint": "^1.10.3",
+    "eslint-config-metalab": "^0.3.0",
+    "json-loader": "^0.5.4",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  },
+  "dependencies": {
+    "lodash.omit": "^3.1.0",
+    "pixi.js": "^3.0.8",
+    "react": "^0.14.3",
+    "react-canvas": "gre/react-canvas#d5ff0876",
+    "react-pixi": "^0.7.4",
+    "react-redux": "^4.0.1",
+    "redux": "^3.0.5",
+    "wrap-component": "^0.1.0"
+  }
+}

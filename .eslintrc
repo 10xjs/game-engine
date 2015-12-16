@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "metalab/standard",
+    "metalab/react"
+  ],
+  "env": {
+    "browser": true
+  }
+}
