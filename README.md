@@ -1,0 +1,12 @@
+todo
+- [x] state management
+- [x] render
+- [x] collision detection
+- [ ] rigid body interaction
+- [ ] texture loading
+- [ ] sprite animation
+- [ ] map loading
+- [ ] menus
+- [ ] save/load state
+- [ ] audio
+- [ ] socket multiplayer
