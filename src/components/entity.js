@@ -10,7 +10,6 @@ export default class Entities extends Component {
 
   render() {
     const { x, y } = this.props;
-    console.log('render entity', x, y);
     return <Rect x={x} y={y} width={16} height={16} fillColor={0xffffff} />;
   }
 }

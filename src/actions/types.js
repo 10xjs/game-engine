@@ -20,3 +20,8 @@ export const FRAME_COUNT = 'FRAME_COUNT';
 // display actions
 // -----------------------------------------------------------------------------
 export const TOGGLE_DEBUG = 'TOGGLE_DEBUG';
+
+// -----------------------------------------------------------------------------
+// local state
+// -----------------------------------------------------------------------------
+export const SET_PLAYER_ID = 'SET_PLAYER_ID';

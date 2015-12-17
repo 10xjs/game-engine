@@ -18,15 +18,15 @@ function moveEntity(state, { payload: { id, x, y } }) {
 
   return {
     ...state,
-    id: entity,
+    [id]: entity,
   };
 }
 
 function createEntity(state, { payload }) {
-  const { id, x, y } = payload;
+  const { id, x, y, speed } = payload;
 
   return {
     ...state,
-    [id]: { id, x, y },
+    [id]: { id, x, y, speed },
   };
 }

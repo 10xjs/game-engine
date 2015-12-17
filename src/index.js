@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import { SPACE } from './input/key-codes';
 import { createEntity } from './actions/entitiy';
 import { keyDown, keyUp } from './actions/input';
+import { setPlayerID } from './actions/local';
 import { getKeyboardKey } from './accessors/input';
 import createStore from './create-store';
 import reducer from './reducers';
@@ -36,23 +37,28 @@ function handleKeyUp(event) {
   store.dispatch(keyUp({ keyCode: event.keyCode }));
 }
 
-loop((frameDuration) => {
+function provision() {
+  store.dispatch(setPlayerID('player'));
+  store.dispatch(createEntity({ id: 'player' }));
+}
+
+function loopHandler(frameDuration) {
   store.dispatch(frameCount());
+  store.dispatch(storeFrameDuration(frameDuration));
 
   const iterations = accumulator.run(dt, frameDuration);
 
   for (let i = 0; i < iterations; i++) {
     const state = store.getState();
-    const actions = integrate(dt, state);
+    const actions = integrate(state);
     actions.map(store.dispatch);
   }
 
   store.notify();
-  store.dispatch(storeFrameDuration(frameDuration));
-});
+}
 
+provision();
 
-console.log('create', createEntity({ id: 'player' }));
-store.dispatch(createEntity({ id: 'player' }));
+loop(loopHandler);
 
 render(<Root store={store}/>);

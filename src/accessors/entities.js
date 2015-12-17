@@ -7,3 +7,7 @@ export function getEntities(state) {
 export function getEntitiesArray(state) {
   return values(getEntities(state));
 }
+
+export function getEntity(state, id) {
+  return getEntities(state)[id];
+}
