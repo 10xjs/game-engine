@@ -18,6 +18,7 @@ class Display extends Component {
     const { width, height, onKeyUp, onKeyDown } = this.props;
     return (
       <Stage
+        backgroundcolor={0x0}
         width={width}
         height={height}
         onKeyDown={onKeyDown}
