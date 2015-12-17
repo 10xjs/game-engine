@@ -1,14 +1,11 @@
-import Pixi from 'pixi.js';
 import { createElement, Component, PropTypes } from 'react';
 import { Text, DisplayObjectContainer } from 'react-pixi';
-import { connect } from 'react-redux';
 
-import { fps } from '../reducers/stats';
 import Rect from './graphics/rect';
 import Line from './graphics/line';
 import Polygon from './graphics/polygon';
 
-class FPS extends Component {
+export default class FPS extends Component {
   static propTypes = {
     fps: PropTypes.number.isRequired,
     displayWidth: PropTypes.number.isRequired,
@@ -21,7 +18,7 @@ class FPS extends Component {
   static defaultProps = {
     width: 200,
     height: 60,
-    color: 0x8BC34A,
+    color: 0x99E63F,
   };
 
   constructor(props) {
@@ -37,9 +34,8 @@ class FPS extends Component {
     const { fps, width } = nextProps;
     const { fpsHistory, count } = this.state;
 
-    this.setState({ count: count + 1 });
-
     this.setState({
+      count: count + 1,
       fpsHistory: ([ fps ].concat(fpsHistory)).slice(0, width),
     });
   }
@@ -66,7 +62,7 @@ class FPS extends Component {
 
     const path = fpsHistory.map((fps, i) => ({
       x: width - i - 1,
-      y: Math.max(0, height - Math.min(height, fps)),
+      y: Math.max(0, height - Math.min(height, fps === Infinity ? 0 : fps)),
     }));
 
     const polyPath = path.concat([
@@ -101,15 +97,3 @@ class FPS extends Component {
     );
   }
 }
-
-const mapState = ({
-  stats: { frameDurations, frameCount },
-  display: { width, height },
-}) => ({
-  fps: fps(frameDurations),
-  frameCount,
-  displayWidth: width,
-  displayHeight: height,
-});
-
-export default connect(mapState)(FPS);

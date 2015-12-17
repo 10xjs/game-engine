@@ -1,7 +1,7 @@
 import { createElement, Component, PropTypes } from 'react';
 import { Provider } from 'react-redux';
 
-import Display from './display';
+import Display from '../containers/display';
 
 export default class Root extends Component {
   static propTypes = {

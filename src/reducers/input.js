@@ -13,10 +13,14 @@ const keyboard = (state = {}, action) => {
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
-function keyDown(state, { payload: { keyCode, time } }) {
+function keyDown(state, { payload: { keyCode, timeStamp } }) {
+  if (state[keyCode]) {
+    return state;
+  }
+
   return {
     ...state,
-    [keyCode]: time,
+    [keyCode]: timeStamp,
   };
 }
 
@@ -27,3 +31,7 @@ function keyUp(state, { payload: { keyCode } }) {
 export default combineReducers({
   keyboard,
 });
+
+export function getKeyboard(state) {
+  return state.input.keyboard;
+}

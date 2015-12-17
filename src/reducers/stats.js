@@ -21,14 +21,6 @@ const frameCount = (state = 0, action) => {
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
-export function fps(frameDurations, smoothing = 10) {
-  const sum = frameDurations.slice(-smoothing).reduce((sum, duration) => {
-    return sum + duration;
-  }, 0);
-
-  return smoothing * 1000 / sum;
-}
-
 export default combineReducers({
   frameDurations,
   frameCount,

@@ -1,3 +1,5 @@
 export default function(dt, state) {
-  return [];
+  const actions = [];
+
+  return actions;
 }

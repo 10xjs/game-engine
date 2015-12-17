@@ -1,10 +1,11 @@
 import { KEY_DOWN, KEY_UP } from './types';
 
-export const keyDown = ({ keyCode, timeStamp }) => ({
+export const keyDown = ({ keyCode, timeStamp, initial }) => ({
   type: KEY_DOWN,
   payload: {
     keyCode,
     timeStamp,
+    initial,
   },
 });
 

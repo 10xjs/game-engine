@@ -4,3 +4,4 @@ export const KEY_DOWN = 'KEY_DOWN';
 export const KEY_UP = 'KEY_UP';
 export const STORE_FRAME_DURATION = 'STORE_FRAME_DURATION';
 export const FRAME_COUNT = 'FRAME_COUNT';
+export const TOGGLE_DEBUG = 'TOGGLE_DEBUG';
