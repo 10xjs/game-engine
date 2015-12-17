@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "lodash.omit": "^3.1.0",
+    "lodash.sortby": "^3.1.5",
+    "lodash.values": "^3.0.0",
     "pixi.js": "^3.0.8",
     "react": "^0.14.3",
     "react-canvas": "gre/react-canvas#d5ff0876",

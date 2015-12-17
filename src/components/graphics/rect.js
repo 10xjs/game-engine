@@ -19,10 +19,8 @@ export default class Rect extends Component {
     width: 100,
     height: 100,
     lineWidth: 1,
-    lineColor: 0x0,
     lineOpacity: 1,
     linePosition: 'inside',
-    fillColor: 0x0,
     fillOpacity: 1,
   }
 
@@ -52,19 +50,22 @@ export default class Rect extends Component {
 
     graphics.clear();
 
-    graphics.lineStyle(lineWidth, lineColor, lineOpacity);
-    if (fillOpacity) {
-      graphics.beginFill(fillColor, fillOpacity);
-    }
-
     let offset = 0;
 
-    if (linePosition === 'outside') {
+    if (linePosition === 'outside' && lineColor !== undefined) {
       offset = 0.5 * lineWidth;
-    } else if (linePosition === 'center') {
-      offset = 0;
-    } else {
+    } else if (linePosition === 'inside' && lineColor !== undefined) {
       offset = -0.5 * lineWidth;
+    } else {
+      offset = 0;
+    }
+
+    if (lineColor !== undefined) {
+      graphics.lineStyle(lineWidth, lineColor, lineOpacity);
+    }
+
+    if (fillColor !== undefined) {
+      graphics.beginFill(fillColor, fillOpacity);
     }
 
     graphics.drawRect(
@@ -74,7 +75,7 @@ export default class Rect extends Component {
       height + offset
     );
 
-    if (fillOpacity) {
+    if (fillColor !== undefined) {
       graphics.endFill();
     }
   }

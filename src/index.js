@@ -1,10 +1,9 @@
 import { createElement } from 'react';
 
 import { SPACE } from './input/key-codes';
+import { createEntity } from './actions/entitiy';
 import { keyDown, keyUp } from './actions/input';
-
 import { getKeyboardKey } from './accessors/input';
-
 import createStore from './create-store';
 import reducer from './reducers';
 import { storeFrameDuration, frameCount } from './actions/stats';
@@ -51,5 +50,9 @@ loop((frameDuration) => {
   store.notify();
   store.dispatch(storeFrameDuration(frameDuration));
 });
+
+
+console.log('create', createEntity({ id: 'player' }));
+store.dispatch(createEntity({ id: 'player' }));
 
 render(<Root store={store}/>);

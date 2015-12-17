@@ -1,7 +1,22 @@
-export const MOVE = 'MOVE';
-export const SET_PLAYER_ID = 'SET_PLAYER_ID';
+// -----------------------------------------------------------------------------
+// entity actions
+// -----------------------------------------------------------------------------
+export const MOVE_ENTITY = 'MOVE_ENTITY';
+export const CREATE_ENTITY = 'CREATE_ENTITY';
+
+// -----------------------------------------------------------------------------
+// input actions
+// -----------------------------------------------------------------------------
 export const KEY_DOWN = 'KEY_DOWN';
 export const KEY_UP = 'KEY_UP';
+
+// -----------------------------------------------------------------------------
+// stats actions
+// -----------------------------------------------------------------------------
 export const STORE_FRAME_DURATION = 'STORE_FRAME_DURATION';
 export const FRAME_COUNT = 'FRAME_COUNT';
+
+// -----------------------------------------------------------------------------
+// display actions
+// -----------------------------------------------------------------------------
 export const TOGGLE_DEBUG = 'TOGGLE_DEBUG';
