@@ -1,32 +1,42 @@
-import { MOVE_ENTITY, CREATE_ENTITY } from '../actions/types';
+import {
+  SET_ENTITY_POSITION,
+  CREATE_ENTITY,
+  SET_ENTITY_STATE,
+} from '../actions/types';
 
 export default (state = {}, action) => {
   const handlers = {
-    [MOVE_ENTITY]: moveEntity,
     [CREATE_ENTITY]: createEntity,
+    [SET_ENTITY_POSITION]: setEntityPosition,
+    [SET_ENTITY_STATE]: setEntityState,
     default: state => state,
   };
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
-function moveEntity(state, { payload: { id, x, y } }) {
-  const entity = {
-    ...state[id],
-    x,
-    y,
-  };
+function createEntity(state, { payload }) {
+  const { id, position, size, speed } = payload;
 
   return {
     ...state,
-    [id]: entity,
+    [id]: { id, position, size, speed },
   };
 }
 
-function createEntity(state, { payload }) {
-  const { id, x, y, speed } = payload;
-
+function updateEntity(state, id, update) {
   return {
     ...state,
-    [id]: { id, x, y, speed },
+    [id]: {
+      ...state[id],
+      ...update,
+    },
   };
+}
+
+function setEntityPosition(state, { payload: { id, position } }) {
+  return updateEntity(state, id, { position });
+}
+
+function setEntityState(state, { payload }) {
+  return updateEntity(state, payload.id, { state: payload.state });
 }

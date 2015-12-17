@@ -12,15 +12,13 @@ export default class Entities extends Component {
   render() {
     const { entities } = this.props;
 
-    const children = sortBy(entities, 'y').map(entity => {
-      const { x, y } = entity;
-      return (
-        <Entity
-          x={x}
-          y={y}
-        />
-      );
-    });
+    const children = sortBy(entities, entity => entity.position.y)
+      .map(entity => {
+        const { position, size, state } = entity;
+        return (
+          <Entity size={size} position={position} state={state} />
+        );
+      });
 
     return <DisplayObjectContainer children={children}/>;
   }

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { KEY_DOWN } from '../actions/types';
-import { D } from '../input/key-codes';
+import { V } from '../input/key-codes';
 
 const width = (state = 640) => {
   return state;
@@ -10,7 +10,7 @@ const height = (state = 480) => {
   return state;
 };
 
-const debug = (state = false, action) => {
+const debug = (state = true, action) => {
   const handlers = {
     [KEY_DOWN]: keyDownDebug,
     default: state => state,
@@ -19,7 +19,7 @@ const debug = (state = false, action) => {
 };
 
 function keyDownDebug(state, { payload: { keyCode, initial } }) {
-  if (keyCode === D && initial) {
+  if (keyCode === V && initial) {
     return ! state;
   }
   return state;

@@ -1,46 +1,72 @@
-import { getPlayerEntity } from '../accessors/local';
-import { getKeyboard } from '../accessors/input';
+import { getPlayerEntity, getPlayerId } from '../accessors/local';
+import { getControlDirection } from '../accessors/input';
+import { getEntitiesArray } from '../accessors/entities';
 
-import { moveEntity } from '../actions/entitiy';
+import { addScaled, scale, subtract, add } from '../math-2d';
 
-import { UP, DOWN, LEFT, RIGHT } from '../input/key-codes'; 
+import { setEntityPosition, setEntityState } from '../actions/entitiy';
 
 export default function(state) {
   const actions = [];
   const playerEntity = getPlayerEntity(state);
+  const playerId = getPlayerId(state);
+
+  const positions = {};
 
   // parse input
-  const keyboard = getKeyboard(state);
-  const left = keyboard[LEFT];
-  const right = keyboard[RIGHT];
-  const up = keyboard[UP];
-  const down = keyboard[DOWN];
+  const controlDirection = getControlDirection(state);
+  const { speed, position } = playerEntity;
 
-  const playerDirection = getDirection({ left, right, up, down });
-
-  // actions.push(setEntityOrientation(playerDirection));
+  positions[playerId] = addScaled(position, controlDirection, speed);
 
   // move entities
 
-  if (playerDirection.x || playerDirection.y) {
-    actions.push(moveEntity({
-      id: playerEntity.id,
-      x: playerEntity.x + playerEntity.speed * playerDirection.x,
-      y: playerEntity.y + playerEntity.speed * playerDirection.y,
-    }));
-  }
+  Object.keys(positions).forEach(id => {
+    const position = positions[id];
+    actions.push(setEntityPosition(id, position));
+  });
 
   // collide entities
+
+  const entities = getEntitiesArray(state);
+
+  fold(entities, (a, b) => {
+
+    if (abbCollide(a, b)) {
+      actions.push(setEntityState(a.id, 'collision'));
+      actions.push(setEntityState(b.id, 'collision'));
+    } else {
+      actions.push(setEntityState(a.id, ''));
+      actions.push(setEntityState(b.id, ''));
+    }
+
+  });
 
   return actions;
 }
 
-function getDirection({ left, right, up, down }) {
-  const x = (left ? -1 : 0) + (right ? 1 : 0);
-  const y = (up ? -1 : 0) + (down ? 1 : 0);
+function abbCollide(a, b, radius = 0) {
+  const topA = addScaled(a.position, a.size, -0.5);
+  const bottomA = add(topA, a.size);
 
-  if ( x && y ) {
-    return { x: x / Math.sqrt(2), y: y / Math.sqrt(2) };
+  const topB = addScaled(b.position, b.size, -0.5);
+  const bottomB = add(topB, b.size);
+
+  const distA = subtract(bottomB, topA);
+  const distB = subtract(bottomA, topB);
+
+  if (distA.x < radius && distB.x < radius) {
+    if (distA.y < radius && distB.y < radius) {
+      return true;
+    }
   }
-  return { x, y };
+  return false;
+}
+
+function fold(array, callback) {
+  for (let i = 0, len = array.length; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+      callback(array[i], array[j]);
+    }
+  }
 }

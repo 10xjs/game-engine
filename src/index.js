@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 
-import { SPACE } from './input/key-codes';
+import { SPACE, LEFT, RIGHT, UP, DOWN } from './input/key-codes';
 import { createEntity } from './actions/entitiy';
 import { keyDown, keyUp } from './actions/input';
 import { setPlayerID } from './actions/local';
@@ -23,7 +23,7 @@ window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
 function handleKeyDown(event) {
-  if (event.keyCode === SPACE) {
+  if ([ SPACE, LEFT, RIGHT, UP, DOWN ].indexOf(event.keyCode) !== -1) {
     event.preventDefault();
   }
   store.dispatch(keyDown({
@@ -39,7 +39,13 @@ function handleKeyUp(event) {
 
 function provision() {
   store.dispatch(setPlayerID('player'));
-  store.dispatch(createEntity({ id: 'player' }));
+  store.dispatch(createEntity({
+    id: 'player',
+    position: { x: 8, y: 8 },
+    speed: 1.5,
+  }));
+
+  store.dispatch(createEntity({ id: 'npc1', position: { x: 100, y: 100 } }));
 }
 
 function loopHandler(frameDuration) {

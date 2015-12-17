@@ -26,16 +26,14 @@ export default class FPS extends Component {
 
     this.state = {
       fpsHistory: [ 0 ],
-      count: 0,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     const { fps, width } = nextProps;
-    const { fpsHistory, count } = this.state;
+    const { fpsHistory } = this.state;
 
     this.setState({
-      count: count + 1,
       fpsHistory: ([ fps ].concat(fpsHistory)).slice(0, width),
     });
   }
@@ -90,7 +88,7 @@ export default class FPS extends Component {
         />
         <Text
           {...textPosition}
-          text={Math.round(fpsHistory[0])}
+          text={Math.round(fpsHistory[0]).toLocaleString()}
           style={textStyle}
         />
       </DisplayObjectContainer>

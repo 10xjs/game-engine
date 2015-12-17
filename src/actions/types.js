@@ -1,8 +1,9 @@
 // -----------------------------------------------------------------------------
 // entity actions
 // -----------------------------------------------------------------------------
-export const MOVE_ENTITY = 'MOVE_ENTITY';
 export const CREATE_ENTITY = 'CREATE_ENTITY';
+export const SET_ENTITY_POSITION = 'SET_ENTITY_POSITION';
+export const SET_ENTITY_STATE = 'SET_ENTITY_STATE';
 
 // -----------------------------------------------------------------------------
 // input actions

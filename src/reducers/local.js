@@ -1,19 +1,19 @@
 import { combineReducers } from 'redux';
 import { SET_PLAYER_ID } from '../actions/types';
 
-const playerID = (state = '', action) => {
+const playerId = (state = '', action) => {
   const handlers = {
-    [SET_PLAYER_ID]: setPlayerID,
+    [SET_PLAYER_ID]: setPlayerId,
     default: state => state,
   };
 
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
-function setPlayerID(state, { payload }) {
+function setPlayerId(state, { payload }) {
   return payload;
 }
 
 export default combineReducers({
-  playerID,
+  playerId,
 });
