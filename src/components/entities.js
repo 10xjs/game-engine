@@ -14,9 +14,10 @@ export default class Entities extends Component {
 
     const children = sortBy(entities, entity => entity.position.y)
       .map(entity => {
-        const { position, size, state } = entity;
+        const { position, size, debug } = entity;
+
         return (
-          <Entity size={size} position={position} state={state} />
+          <Entity size={size} position={position} debug={debug} />
         );
       });
 

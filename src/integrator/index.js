@@ -2,66 +2,65 @@ import { getPlayerEntity, getPlayerId } from '../accessors/local';
 import { getControlDirection } from '../accessors/input';
 import { getEntitiesArray } from '../accessors/entities';
 
-import { addScaled, scale, subtract, add } from '../math-2d';
+import { addScaled, add, subtract } from '../math-2d';
+import { abbCollide, isCollision, resolveCollision } from '../dynamics';
 
-import { setEntityPosition, setEntityState } from '../actions/entitiy';
+import { setEntityPosition, setEntityDebugState } from '../actions/entitiy';
 
-export default function(state) {
-  const actions = [];
-  const playerEntity = getPlayerEntity(state);
-  const playerId = getPlayerId(state);
+let index = 0;
+
+export default function({ getState, dispatch }) {
+  // const actions = [];
+  const playerId = getPlayerId(getState());
+  const playerEntity = getPlayerEntity(getState());
+  getEntitiesArray(getState())
+    .forEach(({ id }) => dispatch(setEntityDebugState(id, {
+      collision: false,
+    })));
 
   const positions = {};
 
   // parse input
-  const controlDirection = getControlDirection(state);
+  const controlDirection = getControlDirection(getState());
   const { speed, position } = playerEntity;
 
   positions[playerId] = addScaled(position, controlDirection, speed);
 
   // move entities
-
   Object.keys(positions).forEach(id => {
     const position = positions[id];
-    actions.push(setEntityPosition(id, position));
+    dispatch(setEntityPosition(id, position));
   });
 
   // collide entities
+  const activeEntities = getEntitiesArray(getState())
+    .filter(entity => entity.active);
 
-  const entities = getEntitiesArray(state);
+  fold(activeEntities, (a, b) => {
+    const distAB = abbCollide(a, b);
 
-  fold(entities, (a, b) => {
+    if (isCollision(distAB)) {
+      dispatch(setEntityDebugState(a.id, {
+        collision: true,
+      }));
 
-    if (abbCollide(a, b)) {
-      actions.push(setEntityState(a.id, 'collision'));
-      actions.push(setEntityState(b.id, 'collision'));
-    } else {
-      actions.push(setEntityState(a.id, ''));
-      actions.push(setEntityState(b.id, ''));
+      dispatch(setEntityDebugState(b.id, {
+        collision: true,
+      }));
+
+      if (a.solid && b.solid) {
+        const resolve = resolveCollision(distAB);
+
+        dispatch(setEntityPosition(a.id, add(a.position, resolve)));
+        // dispatch(setEntityPosition(b.id, subtract(b.position, resolve)));
+        // debugger;
+      }
     }
-
   });
 
-  return actions;
+  index ++;
 }
 
-function abbCollide(a, b, radius = 0) {
-  const topA = addScaled(a.position, a.size, -0.5);
-  const bottomA = add(topA, a.size);
-
-  const topB = addScaled(b.position, b.size, -0.5);
-  const bottomB = add(topB, b.size);
-
-  const distA = subtract(bottomB, topA);
-  const distB = subtract(bottomA, topB);
-
-  if (distA.x < radius && distB.x < radius) {
-    if (distA.y < radius && distB.y < radius) {
-      return true;
-    }
-  }
-  return false;
-}
 
 function fold(array, callback) {
   for (let i = 0, len = array.length; i < len; i++) {

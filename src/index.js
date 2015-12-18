@@ -42,10 +42,42 @@ function provision() {
   store.dispatch(createEntity({
     id: 'player',
     position: { x: 8, y: 8 },
-    speed: 1.5,
+    speed: 1.125,
+    active: true,
+    solid: true,
   }));
 
-  store.dispatch(createEntity({ id: 'npc1', position: { x: 100, y: 100 } }));
+  store.dispatch(createEntity({
+    id:
+    'npc1',
+    position: { x: 16, y: 50 },
+    active: true,
+    solid: true,
+  }));
+
+  store.dispatch(createEntity({
+    id:
+    'npc2',
+    position: { x: 32, y: 50 },
+    active: true,
+    solid: true,
+  }));
+
+  store.dispatch(createEntity({
+    id:
+    'npc3',
+    position: { x: 64, y: 50 },
+    active: true,
+    solid: true,
+  }));
+
+  store.dispatch(createEntity({
+    id:
+    'npc1',
+    position: { x: 80, y: 50 },
+    active: true,
+    solid: true,
+  }));
 }
 
 function loopHandler(frameDuration) {
@@ -55,9 +87,7 @@ function loopHandler(frameDuration) {
   const iterations = accumulator.run(dt, frameDuration);
 
   for (let i = 0; i < iterations; i++) {
-    const state = store.getState();
-    const actions = integrate(state);
-    actions.map(store.dispatch);
+    integrate(store);
   }
 
   store.notify();

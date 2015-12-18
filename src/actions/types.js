@@ -3,7 +3,8 @@
 // -----------------------------------------------------------------------------
 export const CREATE_ENTITY = 'CREATE_ENTITY';
 export const SET_ENTITY_POSITION = 'SET_ENTITY_POSITION';
-export const SET_ENTITY_STATE = 'SET_ENTITY_STATE';
+export const SET_ENTITY_DEBUG_STATE = 'SET_ENTITY_DEBUG_STATE';
+export const SET_ENTITY_VELOCITY = 'SET_ENTITY_VELOCITY';
 
 // -----------------------------------------------------------------------------
 // input actions

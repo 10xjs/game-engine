@@ -13,12 +13,14 @@ export default class FPS extends Component {
     width: PropTypes.number,
     height: PropTypes.number,
     color: PropTypes.number,
+    scale: PropTypes.number,
   };
 
   static defaultProps = {
     width: 200,
     height: 60,
     color: 0x99E63F,
+    scale: 60,
   };
 
   constructor(props) {
@@ -39,7 +41,14 @@ export default class FPS extends Component {
   }
 
   render() {
-    const { displayWidth, displayHeight, width, height, color } = this.props;
+    const {
+      displayWidth,
+      displayHeight,
+      width,
+      height,
+      color,
+      scale,
+    } = this.props;
     const { fpsHistory } = this.state;
     const margin = 10;
 
@@ -58,10 +67,14 @@ export default class FPS extends Component {
       fill: color,
     };
 
-    const path = fpsHistory.map((fps, i) => ({
-      x: width - i - 1,
-      y: Math.max(0, height - Math.min(height, fps === Infinity ? 0 : fps)),
-    }));
+    const path = fpsHistory.map((fps, i) => {
+      const scaled = fps / scale;
+      const amount = Math.min(1, scaled === Infinity ? 0 : scaled);
+      return {
+        x: width - i - 1,
+        y: Math.max(0, 1 - amount) * height,
+      };
+    });
 
     const polyPath = path.concat([
       { x: path.slice(-1)[0].x, y: height },

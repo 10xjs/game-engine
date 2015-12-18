@@ -31,7 +31,7 @@ export function length(v) {
 }
 
 export function subtract(a, b) {
-  return add(scale(a, -1), b);
+  return addScaled(a, b, -1);
 }
 
 export function normalize(v) {
@@ -44,11 +44,11 @@ export function normalize(v) {
 }
 
 export function distance(a, b) {
-  return length(subtract(a, b));
+  return length(subtract(b, a));
 }
 
 export function distanceSquared(a, b) {
-  lengthSquared(subtract(a, b));
+  lengthSquared(subtract(b, a));
 }
 
 export const vectorShape = PropTypes.shape({
