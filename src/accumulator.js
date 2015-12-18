@@ -1,18 +1,15 @@
-export default class Accumulator {
-  constructor() {
-    this.time = 0;
-  }
+export default function createAccumulator(dt) {
+  let time = 0;
 
-  run(dt, frameTime) {
+  return (frameTime) => {
     let iterations = 0;
-    this.time += frameTime;
+    time += frameTime;
 
-    while (this.time >= dt) {
-      this.time -= dt;
+    while (time >= dt) {
+      time -= dt;
       iterations ++;
     }
 
     return iterations;
-
   };
 }

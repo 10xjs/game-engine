@@ -2,11 +2,11 @@ import { combineReducers } from 'redux';
 import { KEY_DOWN } from '../actions/types';
 import { V } from '../input/key-codes';
 
-const width = (state = 640) => {
+const width = (state = 240) => {
   return state;
 };
 
-const height = (state = 480) => {
+const height = (state = 160) => {
   return state;
 };
 

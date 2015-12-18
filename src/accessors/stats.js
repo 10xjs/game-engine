@@ -10,6 +10,10 @@ export function getFrameCount(state) {
   return getStats(state).frameCount;
 }
 
+export function getTime(state) {
+  return getStats(state).time;
+}
+
 export function getFps(state, smoothing = 10) {
   const frameDurations = getFrameDurations(state);
   const samples = frameDurations.slice(-smoothing);

@@ -16,7 +16,7 @@ export const KEY_UP = 'KEY_UP';
 // stats actions
 // -----------------------------------------------------------------------------
 export const STORE_FRAME_DURATION = 'STORE_FRAME_DURATION';
-export const FRAME_COUNT = 'FRAME_COUNT';
+export const TICK = 'TICK';
 
 // -----------------------------------------------------------------------------
 // display actions

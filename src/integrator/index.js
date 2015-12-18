@@ -2,7 +2,7 @@ import { getPlayerEntity, getPlayerId } from '../accessors/local';
 import { getControlDirection } from '../accessors/input';
 import { getEntitiesArray } from '../accessors/entities';
 
-import { addScaled, add, subtract } from '../math-2d';
+import { addScaled, subtractScaled } from '../math-2d';
 import { abbCollide, isCollision, resolveCollision } from '../dynamics';
 
 import { setEntityPosition, setEntityDebugState } from '../actions/entitiy';
@@ -34,9 +34,15 @@ export default function({ getState, dispatch }) {
 
   // collide entities
   const activeEntities = getEntitiesArray(getState())
-    .filter(entity => entity.active);
+    .filter(entity => entity.active && !entity.sleeping);
 
-  fold(activeEntities, (a, b) => {
+  collideEntities(activeEntities, dispatch);
+
+  index ++;
+}
+
+function collideEntities(entities, dispatch) {
+  fold(entities, (a, b) => {
     const distAB = abbCollide(a, b);
 
     if (isCollision(distAB)) {
@@ -51,14 +57,19 @@ export default function({ getState, dispatch }) {
       if (a.solid && b.solid) {
         const resolve = resolveCollision(distAB);
 
-        dispatch(setEntityPosition(a.id, add(a.position, resolve)));
-        // dispatch(setEntityPosition(b.id, subtract(b.position, resolve)));
-        // debugger;
+        const totalIMass = a.iMass + b.iMass;
+
+        const scaleA = a.iMass / totalIMass;
+        const scaleB = b.iMass / totalIMass;
+
+        const positionA = addScaled(a.position, resolve, scaleA);
+        const positionB = subtractScaled(b.position, resolve, scaleB);
+
+        dispatch(setEntityPosition(a.id, positionA));
+        dispatch(setEntityPosition(b.id, positionB));
       }
     }
   });
-
-  index ++;
 }
 
 

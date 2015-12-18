@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { STORE_FRAME_DURATION, FRAME_COUNT } from '../actions/types';
+import { STORE_FRAME_DURATION, TICK } from '../actions/types';
 
 const frameDurations = (state = [], action) => {
   const handlers = {
@@ -13,9 +13,9 @@ function storeFrameDuration(state, { payload }) {
   return state.concat([ payload ]).slice(-100);
 }
 
-const frameCount = (state = 0, action) => {
+const time = (state = 0, action) => {
   const handlers = {
-    [FRAME_COUNT]: (state) => state + 1,
+    [TICK]: (state) => state + 1,
     default: state => state,
   };
   return (handlers[action.type] || handlers.default)(state, action);
@@ -23,5 +23,5 @@ const frameCount = (state = 0, action) => {
 
 export default combineReducers({
   frameDurations,
-  frameCount,
+  time,
 });

@@ -22,9 +22,7 @@ export default class Entities extends Component {
         y={y}
         width={16}
         height={16}
-        fillColor={0xffffff}
-        lineColor={collision ? 0xff0000 : 0x888888}
-        lineWidth={2}
+        fillColor={collision ? 0xff0000 : 0x888888}
         linePosition='inside'
       />
     );

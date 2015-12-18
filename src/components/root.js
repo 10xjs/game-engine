@@ -6,11 +6,12 @@ import Display from '../containers/display';
 export default class Root extends Component {
   static propTypes = {
     store: PropTypes.object.isRequired,
+    onRender: PropTypes.func,
   };
   render() {
     return (
       <Provider store={this.props.store}>
-        <Display />
+        <Display onRender={this.props.onRender}/>
       </Provider>
     );
   }

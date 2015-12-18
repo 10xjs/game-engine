@@ -26,6 +26,10 @@ export function addScaled(a, b, s) {
   return add(a, scale(b, s));
 }
 
+export function subtractScaled(a, b, s) {
+  return addScaled(a, b, -s);
+}
+
 export function length(v) {
   return Math.sqrt(lengthSquared(v));
 }

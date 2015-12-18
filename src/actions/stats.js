@@ -1,10 +1,10 @@
-import { STORE_FRAME_DURATION, FRAME_COUNT } from './types';
+import { STORE_FRAME_DURATION, TICK } from './types';
 
 export const storeFrameDuration = duration => ({
   type: STORE_FRAME_DURATION,
   payload: duration,
 });
 
-export const frameCount = () => ({
-  type: FRAME_COUNT,
+export const tick = () => ({
+  type: TICK,
 });
