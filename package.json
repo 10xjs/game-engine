@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "lodash.omit": "^3.1.0",
+    "lodash.shuffle": "^3.1.0",
     "lodash.sortby": "^3.1.5",
     "lodash.values": "^3.0.0",
     "pixi.js": "^3.0.8",

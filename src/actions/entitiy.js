@@ -5,28 +5,30 @@ import {
   SET_ENTITY_DEBUG_STATE,
 } from '../actions/types';
 
-// active && solid = player, npc, movable, block
-// active && !solid = projectile, door, trigger area,
+// active && dynamic = player, npc, movable, block
+// active && !dynamic = projectile, door, trigger area
 
 export const createEntity = ({
   id,
   debug = {},
   position = { x: 0, y: 0 },
+  velocity = { x: 0, y: 0 },
   size = { x: 16, y: 16 },
   speed = 1.125,
-  active = false, // does the entity cause collisions
-  solid = false, // does the entity stop other entities
-  iMass = 0, // inverse mass ie 1 = 1, 2 = 0.5, 0 = infinify
+  active = false, // does the entity interact with other entities
+  dynamic = false, // does the entity interact physicallt with other entities
+  iMass = 0, // inverse mass
 }) => ({
   type: CREATE_ENTITY,
   payload: {
     id,
     debug,
     position,
+    velocity,
     size,
     speed,
     active,
-    solid,
+    dynamic,
     iMass,
   },
 });

@@ -1,77 +1,82 @@
-import { getPlayerEntity, getPlayerId } from '../accessors/local';
+import shuffle from 'lodash.shuffle';
+import { getPlayerEntity } from '../accessors/local';
 import { getControlDirection } from '../accessors/input';
-import { getEntitiesArray } from '../accessors/entities';
+import { getEntities, getActiveEntities  } from '../accessors/entities';
 
-import { addScaled, subtractScaled } from '../math-2d';
-import { abbCollide, isCollision, resolveCollision } from '../dynamics';
+import { scale } from '../math-2d';
 
-import { setEntityPosition, setEntityDebugState } from '../actions/entitiy';
+import {
+  integrateVelocity,
+  abbIntersect,
+  isCollision,
+  resolveCollision,
+} from '../dynamics';
 
-let index = 0;
+import {
+  setEntityPosition,
+  setEntityDebugState,
+  setEntityVelocity,
+} from '../actions/entitiy';
 
 export default function({ getState, dispatch }) {
-  // const actions = [];
-  const playerId = getPlayerId(getState());
-  const playerEntity = getPlayerEntity(getState());
-  getEntitiesArray(getState())
-    .forEach(({ id }) => dispatch(setEntityDebugState(id, {
-      collision: false,
-    })));
+  clearEntityDebug(getEntities(getState()), dispatch);
 
-  const positions = {};
-
-  // parse input
+  // Handle input
   const controlDirection = getControlDirection(getState());
-  const { speed, position } = playerEntity;
+  const player = getPlayerEntity(getState());
 
-  positions[playerId] = addScaled(position, controlDirection, speed);
+  setVelocityFromDirection(player, controlDirection, dispatch);
 
-  // move entities
-  Object.keys(positions).forEach(id => {
-    const position = positions[id];
-    dispatch(setEntityPosition(id, position));
+  // Integrate velocities
+  integrateEntityVelocities(getActiveEntities(getState()), dispatch);
+
+  // Collide entities
+  collideEntities(getActiveEntities(getState()), dispatch);
+}
+
+function clearEntityDebug(entities, dispatch) {
+  entities.forEach(({ id }) => {
+    dispatch(setEntityDebugState(id, { collision: false }));
   });
+}
 
-  // collide entities
-  const activeEntities = getEntitiesArray(getState())
-    .filter(entity => entity.active && !entity.sleeping);
+function setVelocityFromDirection(entity, direction, dispatch) {
+  const velocity = scale(direction, entity.speed);
+  dispatch(setEntityVelocity(entity.id, velocity));
+}
 
-  collideEntities(activeEntities, dispatch);
-
-  index ++;
+function integrateEntityVelocities(entities, dispatch) {
+  entities.forEach(entity => {
+    const newPosition = integrateVelocity(entity);
+    dispatch(setEntityPosition(entity.id, newPosition));
+  });
 }
 
 function collideEntities(entities, dispatch) {
-  fold(entities, (a, b) => {
-    const distAB = abbCollide(a, b);
+  const collided = [];
+  fold(shuffle(entities), (a, b) => {
+    // non dynamic entites do not interact
+    if (a.dynamic || b.dynamic) {
+      const distAB = abbIntersect(a, b);
 
-    if (isCollision(distAB)) {
-      dispatch(setEntityDebugState(a.id, {
-        collision: true,
-      }));
+      if (isCollision(distAB)) {
+        collided.push(a.id);
+        collided.push(b.id);
 
-      dispatch(setEntityDebugState(b.id, {
-        collision: true,
-      }));
-
-      if (a.solid && b.solid) {
-        const resolve = resolveCollision(distAB);
-
-        const totalIMass = a.iMass + b.iMass;
-
-        const scaleA = a.iMass / totalIMass;
-        const scaleB = b.iMass / totalIMass;
-
-        const positionA = addScaled(a.position, resolve, scaleA);
-        const positionB = subtractScaled(b.position, resolve, scaleB);
-
-        dispatch(setEntityPosition(a.id, positionA));
-        dispatch(setEntityPosition(b.id, positionB));
+        // a pair of dynamic entities can interact phcysically
+        if (a.dynamic && b.dynamic) {
+          const [ aPosition, bPosition ] = resolveCollision(a, b, distAB);
+          dispatch(setEntityPosition(a.id, aPosition));
+          dispatch(setEntityPosition(b.id, bPosition));
+        }
       }
     }
   });
-}
 
+  collided.forEach(id => {
+    dispatch(setEntityDebugState(id, { contact: true }));
+  });
+}
 
 function fold(array, callback) {
   for (let i = 0, len = array.length; i < len; i++) {

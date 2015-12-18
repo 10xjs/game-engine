@@ -5,6 +5,8 @@ import {
   SET_ENTITY_DEBUG_STATE,
 } from '../actions/types';
 
+// Reducers
+
 export default (state = {}, action) => {
   const handlers = {
     [CREATE_ENTITY]: createEntity,
@@ -16,42 +18,13 @@ export default (state = {}, action) => {
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
+// Action Handlers
+
 function createEntity(state, { payload }) {
-  const {
-    id,
-    debug,
-    position,
-    velocity,
-    size,
-    speed,
-    active,
-    solid,
-    iMass,
-  } = payload;
-
+  const { id } = payload;
   return {
     ...state,
-    [id]: {
-      id,
-      debug,
-      position,
-      velocity,
-      size,
-      speed,
-      active,
-      solid,
-      iMass,
-    },
-  };
-}
-
-function updateEntity(state, id, update) {
-  return {
-    ...state,
-    [id]: {
-      ...state[id],
-      ...update,
-    },
+    [id]: payload,
   };
 }
 
@@ -66,3 +39,16 @@ function setEntityVelocity(state, { payload: { id, velocity } }) {
 function setEntityDebugState(state, { payload }) {
   return updateEntity(state, payload.id, { debug: payload.state });
 }
+
+// Helpers
+
+function updateEntity(state, id, update) {
+  return {
+    ...state,
+    [id]: {
+      ...state[id],
+      ...update,
+    },
+  };
+}
+

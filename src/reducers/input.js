@@ -3,6 +3,8 @@ import omit from 'lodash.omit';
 
 import { KEY_DOWN, KEY_UP } from '../actions/types';
 
+// Reducers
+
 const keyboard = (state = {}, action) => {
   const handlers = {
     [KEY_DOWN]: keyDown,
@@ -12,6 +14,8 @@ const keyboard = (state = {}, action) => {
 
   return (handlers[action.type] || handlers.default)(state, action);
 };
+
+// Action handlers
 
 function keyDown(state, { payload: { keyCode, timeStamp } }) {
   if (state[keyCode]) {
@@ -31,7 +35,3 @@ function keyUp(state, { payload: { keyCode } }) {
 export default combineReducers({
   keyboard,
 });
-
-export function getKeyboard(state) {
-  return state.input.keyboard;
-}

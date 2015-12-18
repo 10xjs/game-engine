@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import Entities from '../components/entities';
 
 import {
-  getEntitiesArray,
+  getEntities,
 } from '../accessors/entities';
 
 const mapState = state => ({
-  entities: getEntitiesArray(state),
+  entities: getEntities(state),
 });
 
 export default connect(mapState)(Entities);

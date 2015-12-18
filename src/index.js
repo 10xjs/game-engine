@@ -52,7 +52,7 @@ function provision() {
     position: { x: 8, y: 8 },
     speed: 1.125,
     active: true,
-    solid: true,
+    dynamic: true,
     iMass: 2,
   }));
 
@@ -61,7 +61,7 @@ function provision() {
     'npc1',
     position: { x: 16, y: 50 },
     active: true,
-    solid: true,
+    dynamic: true,
   }));
 
   store.dispatch(createEntity({
@@ -69,7 +69,7 @@ function provision() {
     'npc2',
     position: { x: 32, y: 50 },
     active: true,
-    solid: true,
+    dynamic: true,
   }));
 
   store.dispatch(createEntity({
@@ -77,7 +77,7 @@ function provision() {
     'npc3',
     position: { x: 64, y: 50 },
     active: true,
-    solid: true,
+    dynamic: true,
   }));
 
   store.dispatch(createEntity({
@@ -85,7 +85,7 @@ function provision() {
     'npc4',
     position: { x: 96, y: 50 },
     active: true,
-    solid: true,
+    dynamic: true,
     iMass: 1,
   }));
 }

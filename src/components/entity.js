@@ -13,7 +13,7 @@ export default class Entities extends Component {
 
   render() {
     const { size, position, debug } = this.props;
-    const { collision } = debug;
+    const { contact } = debug;
     const { x, y } = addScaled(position, size, -0.5);
 
     return (
@@ -22,7 +22,7 @@ export default class Entities extends Component {
         y={y}
         width={16}
         height={16}
-        fillColor={collision ? 0xff0000 : 0x888888}
+        fillColor={contact ? 0xff0000 : 0x888888}
         linePosition='inside'
       />
     );
