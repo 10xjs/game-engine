@@ -1,87 +1,75 @@
-import shuffle from 'lodash.shuffle';
-import { getPlayerEntity } from '../accessors/local';
-import { getControlDirection } from '../accessors/input';
-import { getEntities, getActiveEntities  } from '../accessors/entities';
+import { getPlayerSpeed, getPlayerEntityId, getPlayerEntity } from '../accessors/local';
+import { getControlDirection, getKeyPressed } from '../accessors/input';
+import { getDynamicsStateClone } from '../accessors/dynamics';
 
 import { scale } from '../math-2d';
 
 import {
-  integrateVelocity,
-  abbIntersect,
+  applyVelocities,
+  resolveCollisions,
   isCollision,
-  resolveCollision,
-} from '../dynamics';
+  applyImpulses,
+} from './dynamics';
 
 import {
   setEntityPosition,
-  setEntityDebugState,
   setEntityVelocity,
+  setEntityDebugState,
 } from '../actions/entitiy';
 
+import {
+  toggleDisplayDebug,
+} from '../actions/display';
+
+import { KEY_CODE } from '../constants/input';
+
 export default function({ getState, dispatch }) {
-  clearEntityDebug(getEntities(getState()), dispatch);
+  // Update the game state from the current input.
+  integrateInput(getState(), dispatch);
 
-  // Handle input
-  const controlDirection = getControlDirection(getState());
-  const player = getPlayerEntity(getState());
-
-  setVelocityFromDirection(player, controlDirection, dispatch);
-
-  // Integrate velocities
-  integrateEntityVelocities(getActiveEntities(getState()), dispatch);
-
-  // Collide entities
-  collideEntities(getActiveEntities(getState()), dispatch);
-}
-
-function clearEntityDebug(entities, dispatch) {
-  entities.forEach(({ id }) => {
-    dispatch(setEntityDebugState(id, { collision: false }));
-  });
-}
-
-function setVelocityFromDirection(entity, direction, dispatch) {
-  const velocity = scale(direction, entity.speed);
-  dispatch(setEntityVelocity(entity.id, velocity));
-}
-
-function integrateEntityVelocities(entities, dispatch) {
-  entities.forEach(entity => {
-    const newPosition = integrateVelocity(entity);
-    dispatch(setEntityPosition(entity.id, newPosition));
-  });
-}
-
-function collideEntities(entities, dispatch) {
-  const collided = [];
-  fold(shuffle(entities), (a, b) => {
-    // non dynamic entites do not interact
-    if (a.dynamic || b.dynamic) {
-      const distAB = abbIntersect(a, b);
-
-      if (isCollision(distAB)) {
-        collided.push(a.id);
-        collided.push(b.id);
-
-        // a pair of dynamic entities can interact phcysically
-        if (a.dynamic && b.dynamic) {
-          const [ aPosition, bPosition ] = resolveCollision(a, b, distAB);
-          dispatch(setEntityPosition(a.id, aPosition));
-          dispatch(setEntityPosition(b.id, bPosition));
-        }
-      }
+  // Move each entity by its velocity and run a single step of the collision
+  // detector and resolver.
+  integrateDynamics(getState(), dispatch, (a, b, distAB) => {
+    if (isCollision(distAB)) {
+      dispatch(setEntityDebugState(a.id, { contact: true }));
+      dispatch(setEntityDebugState(b.id, { contact: true }));
     }
   });
-
-  collided.forEach(id => {
-    dispatch(setEntityDebugState(id, { contact: true }));
-  });
 }
 
-function fold(array, callback) {
-  for (let i = 0, len = array.length; i < len; i++) {
-    for (let j = i + 1; j < len; j++) {
-      callback(array[i], array[j]);
-    }
+function integrateInput(state, dispatch) {
+  // Toggle display debug
+  if (getKeyPressed(state, KEY_CODE.V)) {
+    dispatch(toggleDisplayDebug());
   }
+
+  // Apply character control.
+  const id = getPlayerEntityId(state);
+  const direction = getControlDirection(state);
+  const playerSpeed = getPlayerSpeed(state);
+  const velocity = scale(direction, playerSpeed);
+
+  dispatch(setEntityVelocity(id, velocity));
+}
+
+function integrateDynamics(state, dispatch, handleCollision) {
+  // Get a clone of the state of all of the dynamic entity values.
+  const dynamicsState = getDynamicsStateClone(state);
+
+  // The following function operate directly on and mutate the state.
+  const { entities } = dynamicsState;
+
+  // Move each entity by its velocity.
+  applyVelocities(entities);
+
+  // Detect collisions and create impulses.
+  resolveCollisions(entities, handleCollision);
+
+  // Move each enity by the average of all the impulses added in the collision
+  // phase.
+  applyImpulses(entities);
+
+  entities.forEach(entity => {
+    dispatch(setEntityPosition(entity.id, entity.position));
+  });
 }

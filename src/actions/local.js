@@ -1,6 +1,6 @@
-import { SET_PLAYER_ID } from './types';
+import { SET_PLAYER_ENTITY_ID } from '../constants/actions';
 
-export const setPlayerID = id => ({
-  type: SET_PLAYER_ID,
+export const setPlayerEntityID = id => ({
+  type: SET_PLAYER_ENTITY_ID,
   payload: id,
 });

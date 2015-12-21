@@ -15,15 +15,15 @@ export const KEY_UP = 'KEY_UP';
 // -----------------------------------------------------------------------------
 // stats actions
 // -----------------------------------------------------------------------------
-export const STORE_FRAME_DURATION = 'STORE_FRAME_DURATION';
+export const FRAME = 'FRAME';
 export const TICK = 'TICK';
 
 // -----------------------------------------------------------------------------
 // display actions
 // -----------------------------------------------------------------------------
-export const TOGGLE_DEBUG = 'TOGGLE_DEBUG';
+export const TOGGLE_DISPLAY_DEBUG = 'TOGGLE_DISPLAY_DEBUG';
 
 // -----------------------------------------------------------------------------
 // local state
 // -----------------------------------------------------------------------------
-export const SET_PLAYER_ID = 'SET_PLAYER_ID';
+export const SET_PLAYER_ENTITY_ID = 'SET_PLAYER_ENTITY_ID';

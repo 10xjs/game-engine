@@ -11,8 +11,6 @@ todo
 - [ ] audio
 - [ ] socket multiplayer
 
-
-
 ideas
 - add impulses and then average after collision resolution
 - sleep entity

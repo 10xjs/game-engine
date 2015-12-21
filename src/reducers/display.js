@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import { KEY_DOWN } from '../actions/types';
-import { V } from '../input/key-codes';
+import { TOGGLE_DISPLAY_DEBUG } from '../constants/actions';
 
+// -----------------------------------------------------------------------------
 // Reducers
+// -----------------------------------------------------------------------------
 
 const width = (state = 240) => {
   return state;
@@ -14,19 +15,18 @@ const height = (state = 160) => {
 
 const debug = (state = true, action) => {
   const handlers = {
-    [KEY_DOWN]: keyDownDebug,
+    [TOGGLE_DISPLAY_DEBUG]: handleToggleDebug,
     default: state => state,
   };
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
+// -----------------------------------------------------------------------------
 // Action handlers
+// -----------------------------------------------------------------------------
 
-function keyDownDebug(state, { payload: { keyCode, initial } }) {
-  if (keyCode === V && initial) {
-    return ! state;
-  }
-  return state;
+function handleToggleDebug(state) {
+  return !state;
 }
 
 export default combineReducers({

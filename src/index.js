@@ -1,12 +1,11 @@
 import Pixi from 'pixi.js';
-import { SPACE, LEFT, RIGHT, UP, DOWN } from './input/key-codes';
+import { KEYS_SCROLL_WINDOW } from './constants/input';
 import { createEntity } from './actions/entitiy';
 import { keyDown, keyUp } from './actions/input';
-import { setPlayerID } from './actions/local';
-import { getKeyboardKey } from './accessors/input';
+import { setPlayerEntityID } from './actions/local';
 import createStore from './create-store';
 import reducer from './reducers';
-import { storeFrameDuration, tick } from './actions/stats';
+import { frame, tick } from './actions/stats';
 import loop from './loop';
 import createAccumulator from './accumulator';
 
@@ -21,13 +20,12 @@ window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 
 function handleKeyDown(event) {
-  if ([ SPACE, LEFT, RIGHT, UP, DOWN ].indexOf(event.keyCode) !== -1) {
+  if (KEYS_SCROLL_WINDOW.indexOf(event.keyCode) !== -1) {
     event.preventDefault();
   }
   store.dispatch(keyDown({
     keyCode: event.keyCode,
     timeStamp: event.timeStamp,
-    initial: !getKeyboardKey(store.getState(), event.keyCode),
   }));
 }
 
@@ -46,11 +44,10 @@ function loadAssets() {
 }
 
 function provision() {
-  store.dispatch(setPlayerID('player'));
+  store.dispatch(setPlayerEntityID('player'));
   store.dispatch(createEntity({
     id: 'player',
     position: { x: 8, y: 8 },
-    speed: 1.125,
     active: true,
     dynamic: true,
     iMass: 2,
@@ -91,16 +88,19 @@ function provision() {
 }
 
 function loopHandler(frameDuration) {
-  store.dispatch(storeFrameDuration(frameDuration));
-
   const iterations = accumulator(frameDuration);
 
   for (let i = 0; i < iterations; i++) {
+    //
     integrate(store);
+
+    // Advance the state clock.
+    // This event is used to advance animations and flush input.
     store.dispatch(tick());
   }
 
   store.notify();
+  store.dispatch(frame(frameDuration));
 }
 
 loadAssets().then(() =>{

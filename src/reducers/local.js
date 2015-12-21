@@ -1,23 +1,27 @@
 import { combineReducers } from 'redux';
-import { SET_PLAYER_ID } from '../actions/types';
+import { SET_PLAYER_ENTITY_ID } from '../constants/actions';
 
+// -----------------------------------------------------------------------------
 // Reducers
+// -----------------------------------------------------------------------------
 
-const playerId = (state = '', action) => {
+const playerEntityId = (state = '', action) => {
   const handlers = {
-    [SET_PLAYER_ID]: setPlayerId,
+    [SET_PLAYER_ENTITY_ID]: handleSetPlayerId,
     default: state => state,
   };
 
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
+// -----------------------------------------------------------------------------
 // Action handlers
+// -----------------------------------------------------------------------------
 
-function setPlayerId(state, { payload }) {
+function handleSetPlayerId(state, { payload }) {
   return payload;
 }
 
 export default combineReducers({
-  playerId,
+  playerEntityId,
 });

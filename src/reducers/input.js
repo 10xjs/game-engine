@@ -1,23 +1,39 @@
 import { combineReducers } from 'redux';
 import omit from 'lodash.omit';
 
-import { KEY_DOWN, KEY_UP } from '../actions/types';
+import { KEY_DOWN, KEY_UP, TICK } from '../constants/actions';
 
+// -----------------------------------------------------------------------------
 // Reducers
+// -----------------------------------------------------------------------------
 
-const keyboard = (state = {}, action) => {
+// State of all keys currently down.
+const keysDown = (state = {}, action) => {
   const handlers = {
-    [KEY_DOWN]: keyDown,
-    [KEY_UP]: keyUp,
+    [KEY_DOWN]: handleKeyDown,
+    [KEY_UP]: handleKeyUp,
     default: state => state,
   };
 
   return (handlers[action.type] || handlers.default)(state, action);
 };
 
-// Action handlers
+// State of all keys pressed during the current integration tick.
+const keysPressed = (state = {}, action) => {
+  const handlers = {
+    [KEY_DOWN]: handleKeyDown,
+    [TICK]: handleTick,
+    default: state => state,
+  };
 
-function keyDown(state, { payload: { keyCode, timeStamp } }) {
+  return (handlers[action.type] || handlers.default)(state, action);
+};
+
+// -----------------------------------------------------------------------------
+// Action handlers
+// -----------------------------------------------------------------------------
+
+function handleKeyDown(state, { payload: { keyCode, timeStamp } }) {
   if (state[keyCode]) {
     return state;
   }
@@ -28,10 +44,15 @@ function keyDown(state, { payload: { keyCode, timeStamp } }) {
   };
 }
 
-function keyUp(state, { payload: { keyCode } }) {
+function handleKeyUp(state, { payload: { keyCode } }) {
   return omit(state, keyCode);
 }
 
+function handleTick() {
+  return {};
+}
+
 export default combineReducers({
-  keyboard,
+  keysDown,
+  keysPressed,
 });

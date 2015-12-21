@@ -1,7 +1,7 @@
-import { STORE_FRAME_DURATION, TICK } from './types';
+import { FRAME, TICK } from '../constants/actions';
 
-export const storeFrameDuration = duration => ({
-  type: STORE_FRAME_DURATION,
+export const frame = duration => ({
+  type: FRAME,
   payload: duration,
 });
 

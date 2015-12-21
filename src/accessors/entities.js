@@ -11,3 +11,11 @@ export function getEntities(state) {
 export function getActiveEntities(state) {
   return getEntities(state).filter(entity => entity.active);
 }
+
+export function getEntityPosition(state, id) {
+  return getEntity(state, id).position;
+}
+
+export function getEntityVelocity(state, id) {
+  return getEntity(state, id).velocity;
+}

@@ -1,17 +1,26 @@
-import { KEY_DOWN, KEY_UP } from './types';
+import { KEY_DOWN, KEY_UP } from '../constants/actions';
+import { getKeyDown } from '../accessors/input';
 
-export const keyDown = ({ keyCode, timeStamp, initial }) => ({
-  type: KEY_DOWN,
-  payload: {
-    keyCode,
-    timeStamp,
-    initial,
-  },
-});
+export function keyDown({ keyCode, timeStamp, initial }) {
+  return (dispatch, getState) => {
+    return !getKeyDown(getState(), event.keyCode) ? dispatch({
+      type: KEY_DOWN,
+      payload: {
+        keyCode,
+        timeStamp,
+        initial,
+      },
+    }) : null;
+  };
+}
 
-export const keyUp = ({ keyCode }) => ({
-  type: KEY_UP,
-  payload: {
-    keyCode,
-  },
-});
+export function keyUp({ keyCode }) {
+  return (dispatch, getState) => {
+    return getKeyDown(getState(), event.keyCode) ? dispatch({
+      type: KEY_UP,
+      payload: {
+        keyCode,
+      },
+    }) : null;
+  };
+}

@@ -1,5 +1,5 @@
-import { TOGGLE_DEBUG } from './types';
+import { TOGGLE_DISPLAY_DEBUG } from '../constants/actions';
 
-export const toggleDebug = () => ({
-  type: TOGGLE_DEBUG,
+export const toggleDisplayDebug = () => ({
+  type: TOGGLE_DISPLAY_DEBUG,
 });
